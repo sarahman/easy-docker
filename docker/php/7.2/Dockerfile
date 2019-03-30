@@ -34,39 +34,43 @@ RUN apt-get update \
     zip unzip \
     libssh2-1-dev \
     openssl \
-    libxml2-dev \
-  && rm -rf /var/lib/apt/lists/*
+    libxml2-dev
 
 
-
-  # Install the PHP pdo_mysql extention
-  RUN docker-php-ext-install pdo_mysql \
+# Install the PHP pdo_mysql extention
+RUN docker-php-ext-install pdo_mysql \
   # Install the PHP pdo_pgsql extention
   && docker-php-ext-install pdo_pgsql \
   # Install the PHP gd library
   && docker-php-ext-configure gd \
     --enable-gd-native-ttf \
     --with-jpeg-dir=/usr/lib \
-    --with-freetype-dir=/usr/include/freetype2 && \
-    docker-php-ext-install gd
+    --with-freetype-dir=/usr/include/freetype2 \
+  && docker-php-ext-install gd
 
 
+# Install various PHP extentions
 RUN docker-php-ext-install tokenizer \
-    && docker-php-ext-install -j$(nproc) pdo \
-    && docker-php-ext-install mbstring \
+  && docker-php-ext-install -j$(nproc) pdo \
+  && docker-php-ext-install mbstring \
     #&& docker-php-ext-install simplexml \
-    && docker-php-ext-install ctype \
-    && docker-php-ext-install json
+  && docker-php-ext-install ctype \
+  && docker-php-ext-install json \
+  && docker-php-ext-install bcmath
 
- RUN docker-php-ext-install bcmath
+
+# Install the mysql-client for mysqldump
+RUN apt-get update \
+  && apt-get install -y mysql-client
+
 
 #composer setup
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 
 RUN pecl install -o -f redis \
-    &&  rm -rf /tmp/pear \
-    &&  echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini
+  && rm -rf /tmp/pear \
+  && echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini
 
 
 #
@@ -77,8 +81,8 @@ RUN pecl install -o -f redis \
 
 # Clean up
 USER root
-RUN apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 
 # Set default work directory
 WORKDIR /var/www
