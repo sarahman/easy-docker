@@ -53,9 +53,20 @@ RUN yes | pecl install mcrypt-1.0.2 \
 
 
 # Install various PHP extentions
-RUN docker-php-ext-install bcmath \
+RUN docker-php-ext-install tokenizer \
+  && docker-php-ext-install -j$(nproc) pdo \
+  && docker-php-ext-install mbstring \
+    #&& docker-php-ext-install simplexml \
+  && docker-php-ext-install ctype \
+  && docker-php-ext-install json \
+  && docker-php-ext-install bcmath \
   #&& docker-php-ext-install simplexml \
   && docker-php-ext-install sysvsem
+
+
+# Install the mysql-client for mysqldump
+RUN apt-get update \
+  && apt-get install -y mysql-client
 
 
 # Install the mysql-client for mysqldump
