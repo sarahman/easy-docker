@@ -56,7 +56,8 @@ RUN docker-php-ext-install tokenizer \
     #&& docker-php-ext-install simplexml \
   && docker-php-ext-install ctype \
   && docker-php-ext-install json \
-  && docker-php-ext-install bcmath
+  && docker-php-ext-install bcmath \
+  && docker-php-ext-install sysvsem
 
 
 # Install the mysql-client for mysqldump
