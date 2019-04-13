@@ -32,13 +32,12 @@ RUN apt-get update \
     supervisor \
     nano \
     zip unzip \
-    libssh2-1-dev \
-  && rm -rf /var/lib/apt/lists/*
+    libssh2-1-dev
 
 
 
-  # Install the PHP pdo_mysql extention
-  RUN docker-php-ext-install pdo_mysql \
+# Install the PHP pdo_mysql extention
+RUN docker-php-ext-install pdo_mysql \
   # Install the PHP pdo_pgsql extention
   && docker-php-ext-install pdo_pgsql \
   # Install the PHP gd library
@@ -59,6 +58,12 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN pecl install -o -f redis \
     &&  rm -rf /tmp/pear \
     &&  echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini
+
+
+RUN yes | pecl install xdebug-2.5.5 \
+  && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
+  && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
+  && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/xdebug.ini
 
 
 #
