@@ -8,6 +8,10 @@ FROM php:7.1.3-fpm
 
 MAINTAINER Syed Abidur Rahman <aabid048@gmail.com>
 
+RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
+
+RUN sed -i '/deb http:\/\/deb.debian.org\/debian jessie-updates main/d' /etc/apt/sources.list
+
 #
 #--------------------------------------------------------------------------
 # Software's Installation
@@ -18,7 +22,7 @@ MAINTAINER Syed Abidur Rahman <aabid048@gmail.com>
 
 # Install "curl", "libmemcached-dev", "libpq-dev", "libjpeg-dev",
 #         "libpng-dev", "libfreetype6-dev", "libssl-dev", "libmcrypt-dev",
-RUN apt-get update \
+RUN apt-get -o Acquire::Check-Valid-Until=false update \
   && apt-get install -y --no-install-recommends \
     curl \
     libmemcached-dev \
@@ -50,7 +54,7 @@ RUN docker-php-ext-install pdo_mysql \
 
 RUN docker-php-ext-install -j$(nproc) mcrypt \
   && docker-php-ext-install -j$(nproc) pdo \
-  && docker-php-ext-install mbstring
+  && docker-php-ext-install mbstring sysvsem
 
 
 # Composer setup
