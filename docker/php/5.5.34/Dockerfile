@@ -54,7 +54,7 @@ RUN docker-php-ext-install -j$(nproc) mcrypt mbstring pdo
 
 
 # Install the redis extension
-RUN pecl install -o -f redis \
+RUN pecl install -o -f redis-4.3.0 \
   && rm -rf /tmp/pear \
   && echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini
 
