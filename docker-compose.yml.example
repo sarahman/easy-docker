@@ -96,7 +96,7 @@ services:
       - MYSQL_PASSWORD=${DB_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
     volumes:
-      - ./backup/mysql:/var/lib/mysql
+      - ./backup/mysql/data:/var/lib/mysql
       - ./docker/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     user: mysql
     ports:
@@ -200,7 +200,7 @@ services:
 #     container_name: elasticsearch
 #     image: docker.elastic.co/elasticsearch/elasticsearch:8.4.0
 #     restart: always
-#     environment:      
+#     environment:
 #       # ES_JAVA_OPTS: -Xms512m -Xmx512m
 #       # discovery.type: single-node
 #       #- cluster.routing.allocation.disk.threshold_enabled=false
