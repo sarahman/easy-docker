@@ -3,11 +3,22 @@ An easy way to maintain PHP version with some essential config like as virtual H
 
 Note: This package is forked from [rinkurock/easy-docker](https://github.com/rinkurock/easy-docker) package; thanks to the author of that package.
 
+## Features
+* Vertual Host with nginx
+* PHP FPM
+* PHP version 5.6, 7.0, 7.1, 7.2 etc
+* MySql
+* Postgres
+* Adminer
+* Redis
+* Consul
+* RabbitMq
+
 ## Getting started
 
 1. Clone the `easy-docker` github repository
 ```Bash
-git clone https://github.com/sarahman/easy-docker
+git clone https://github.com/sarahman/easy-docker ~/easy-docker
 ```
 
 2. Go to `easy-docker` directory
@@ -45,7 +56,7 @@ Run:
 sudo ./v-host.sh
 ```
 
-and flow the instruction on command line
+and follow the instructions on command line
 
 * sudo for only adding local domain address on `/etc/hosts` file on your system.
 
@@ -60,17 +71,14 @@ Run:
 docker-compose ps
 ```
 
-## Features
-* Vertual Host with nginx
-* PHP FPM
-* PHP version 5.6, 7.0, 7.1, 7.2 etc
-* MySql
-* Postgres
-* Adminer
-* Redis
-* Consul
-* RabbitMq
+#### Accessing Globally
+Sometimes you may want to `docker-compose` up your `easy-docker` machine from anywhere on your filesystem. You can do this on Mac / Linux systems by adding a Bash function to your Bash profile. On Windows, you may accomplish this by adding a "batch" file to your PATH. These scripts will allow you to run any Vagrant command from anywhere on your system and will automatically point that command to your Homestead installation:
 
+```
+function easydocker() {
+    ( cd ~/easy-docker && docker-compose $* )
+}
+```
 
 ## Contribution
 All issues, PRs and advices are more than welcome to discuss about. :)
