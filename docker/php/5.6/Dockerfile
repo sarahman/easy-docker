@@ -25,39 +25,21 @@ RUN sed -i '/stretch-updates/d' /etc/apt/sources.list
 
 # Install "curl", "libmemcached-dev", "libpq-dev", "libjpeg-dev",
 #         "libpng-dev", "libfreetype6-dev", "libssl-dev", "libmcrypt-dev",
+# 1. development packages
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
-    curl \
-    libmemcached-dev \
-    libz-dev \
-    libpq-dev \
-    libjpeg-dev \
-    libpng-dev \
-    libfreetype6-dev \
-    libssl-dev \
-    libmcrypt-dev \
-    supervisor \
-    nano \
-    zip unzip \
-    libssh2-1-dev \
+  && apt-get install -y curl g++ git gettext sqlite3 supervisor unzip zip \
+    libbz2-dev libc-client-dev libenchant-dev libfreetype6-dev libgmp-dev \
+    libicu-dev libjpeg-dev libkrb5-dev libmcrypt-dev libpng-dev libreadline-dev \
+    libpspell-dev libtidy-dev libxml2-dev libxslt-dev \
   && rm -rf /var/lib/apt/lists/*
 
-
-
-  # Install the PHP pdo_mysql extention
-  RUN docker-php-ext-install pdo_mysql \
-  # Install the PHP pdo_pgsql extention
-  && docker-php-ext-install pdo_pgsql \
-  # Install the PHP gd library
-  && docker-php-ext-configure gd \
-    --enable-gd-native-ttf \
-    --with-jpeg-dir=/usr/lib \
-    --with-freetype-dir=/usr/include/freetype2 && \
-    docker-php-ext-install gd
-
-RUN docker-php-ext-install -j$(nproc) mcrypt \
-    && docker-php-ext-install -j$(nproc) pdo \
-    && docker-php-ext-install mbstring
+# 2. start with base php config, then add extensions
+RUN ln -s /usr/include/x86_64-linux-gnu/gmp.h /usr/include/gmp.h
+RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl
+RUN docker-php-ext-install bcmath bz2 calendar enchant exif gd gmp gettext \
+    iconv imap intl mbstring mcrypt mysql mysqli opcache pcntl pdo_mysql pspell \
+    shmop soap sockets sysvmsg sysvsem sysvshm tidy wddx xml xmlrpc xsl zip
 
 #composer setup
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
