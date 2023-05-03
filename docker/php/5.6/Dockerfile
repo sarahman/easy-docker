@@ -31,8 +31,7 @@ RUN apt-get update \
   && apt-get install -y curl g++ git gettext sqlite3 supervisor unzip zip \
     libbz2-dev libc-client-dev libenchant-dev libfreetype6-dev libgmp-dev \
     libicu-dev libjpeg-dev libkrb5-dev libmcrypt-dev libpng-dev libreadline-dev \
-    libpspell-dev libtidy-dev libxml2-dev libxslt-dev \
-  && rm -rf /var/lib/apt/lists/*
+    libpspell-dev libtidy-dev libxml2-dev libxslt-dev
 
 # 2. start with base php config, then add extensions
 RUN ln -s /usr/include/x86_64-linux-gnu/gmp.h /usr/include/gmp.h
@@ -43,6 +42,13 @@ RUN docker-php-ext-install bcmath bz2 calendar enchant exif gd gmp gettext \
 
 #composer setup
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+
+# xDebug installation
+RUN yes | pecl install xdebug-2.5.5 \
+  && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
+  && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
+  && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/xdebug.ini
 
 
 # RUN pecl install -o -f redis \
