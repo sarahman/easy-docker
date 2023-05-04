@@ -93,6 +93,24 @@ function easydocker() {
 }
 ```
 
+## Miscellaneous
+
+### Setup ZSH Terminal For Better Terminal
+
+[https://ohmyz.sh/](https://ohmyz.sh/) is used for the better terminal experience. [This link](https://vitux.com/ubuntu-zsh-shell) can be used to install the zsh terminal or can follow the following commands:
+
+```bash
+easydocker exec php bash
+apt-get update && apt-get dist-upgrade -y
+apt-get install -y build-essential curl file fonts-powerline git git-core zsh
+dpkg-reconfigure dash
+sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+git config --global oh-my-zsh.hide-status 1
+git config --global oh-my-zsh.hide-dirty 1
+exit
+easydocker exec php zsh
+```
+
 ## Contribution
 
 All issues, PRs and advices are more than welcome to discuss about. :)
