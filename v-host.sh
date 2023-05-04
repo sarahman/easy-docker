@@ -1,10 +1,11 @@
 #! /bin/bash
 
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-BLUE='\033[0;36m'
-GREEN='\033[0m' # No Color
-BOLD='\033[1m'
+source .env
+
+RED='\e[0;31m'
+BLUE='\e[0;34m'
+GREEN='\e[0;32m'
+BOLD='\e[1m'
 END='\e[0m'
 ROOT_PATH=$PWD
 
@@ -18,6 +19,14 @@ wprint() {
 
 eprint() {
     printf "\n${RED}${BOLD}$1${END}\n"
+}
+
+printInputText() {
+    printf "\n${GREEN}${BOLD}$1${END}"
+}
+
+printInfoText() {
+    printf "\e[1;${LIGHT_CYAN:-96}m$1${END}"
 }
 
 createVirtualHost() {
@@ -59,9 +68,10 @@ copyConfigToDockerNginx() {
 }
 
 askCopyConfigToDockerNginx() {
-    wprint "Do you want to copy ngnix virtual host file (y/n)?"
-    read answer
-    if echo "$answer" | grep -iq "^y" ;then
+    printInputText "Do you want to copy ngnix virtual host file (y/n)? "
+    read -r answer
+
+    if echo "$answer" | grep -iq "^y"; then
         copyConfigToDockerNginx
     else
         echo No
@@ -70,19 +80,21 @@ askCopyConfigToDockerNginx() {
 }
 
 callConfiguration() {
-    pprint "Enter relative path according to .env \`APPLICATION\` config such as (your-project-directory/public)?"
-    read directory
+    printInputText "Enter relative path according to .env \`APPLICATION\` config such as (your-project-directory/public)."
+    printInfoText "\n${APPLICATION}/"
+    read -r directory
 
-    wprint "PS: chrome does not support .dev domain any more !"
-    echo web url \(example.local\)?
-    read url
+    printInfoText "\nPS: chrome does not support .dev domain any more!"
+    printInputText "web url (example.local): "
+    read -r url
 
-    wprint "Project Path: ${ROOT_PATH}/$directory"
-    wprint "Url: $url"
+    wprint "Project Path: ${APPLICATION}/$directory"
+    wprint "\b\bUrl: $url"
 
-    pprint "Are you want to continue (y/n)?"
-    read answer
-    if echo "$answer" | grep -iq "^y" ;then
+    printInputText "Are you want to continue (y/n)? "
+    read -r answer
+
+    if echo "$answer" | grep -iq "^y"; then
         createVirtualHost
     else
         eprint exit
@@ -90,8 +102,9 @@ callConfiguration() {
     fi
 }
 
-pprint "Do you want to new ngnix virtual host file? (y/n)"
-read answer
+printInputText "Do you want to new ngnix virtual host file (y/n)? "
+read -r answer
+
 if echo "$answer" | grep -iq "^y"; then
     callConfiguration
 else
